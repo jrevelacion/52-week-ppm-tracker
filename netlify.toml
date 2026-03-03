@@ -1,0 +1,47 @@
+# Netlify Configuration for 52-Week PM Tracker Web
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+# Environment variables (can also be set in Netlify UI)
+[build.environment]
+  VITE_API_URL = "http://localhost:3000/api"
+
+# Redirect rules for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache headers for assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache headers for index.html
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Gzip compression
+[context.production.environment]
+  VITE_API_URL = "https://your-production-api.com/api"
+
+[context.deploy-preview.environment]
+  VITE_API_URL = "https://your-staging-api.com/api"
+
+[context.branch-deploy.environment]
+  VITE_API_URL = "https://your-staging-api.com/api"
